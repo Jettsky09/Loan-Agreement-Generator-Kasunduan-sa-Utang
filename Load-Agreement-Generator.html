@@ -865,6 +865,7 @@
               inp.addEventListener("input", function () {
                 witnesses[idx].name = inp.value;
                 render();
+                saveState();
               });
             })(inputs[j]);
           }
@@ -876,6 +877,7 @@
                 witnesses.splice(idx, 1);
                 buildWitnessForm();
                 render();
+                saveState();
               });
             })(dels[k]);
           }
@@ -1031,6 +1033,62 @@
           }
         }
 
+        var STORAGE_KEY = "kasunduan_sa_utang_v1";
+
+        // ---- Save to localStorage ----
+        function saveState() {
+          var checkIds = [
+            "hasTerm",
+            "hasCollateral",
+            "hasRemata",
+            "hasWitness",
+            "lendJeff",
+            "lendClar",
+          ];
+          var state = { fields: {}, checks: {}, witnesses: witnesses };
+          ids.forEach(function (id) {
+            state.fields[id] = $(id).value;
+          });
+          checkIds.forEach(function (id) {
+            state.checks[id] = $(id).checked;
+          });
+          try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+          } catch (e) {}
+        }
+
+        // ---- Load from localStorage ----
+        function loadState() {
+          try {
+            var raw = localStorage.getItem(STORAGE_KEY);
+            if (!raw) return false;
+            var state = JSON.parse(raw);
+            if (state.fields)
+              ids.forEach(function (id) {
+                if (state.fields[id] !== undefined)
+                  $(id).value = state.fields[id];
+              });
+            if (state.checks) {
+              [
+                "hasTerm",
+                "hasCollateral",
+                "hasRemata",
+                "hasWitness",
+                "lendJeff",
+                "lendClar",
+              ].forEach(function (id) {
+                if (state.checks[id] !== undefined)
+                  $(id).checked = state.checks[id];
+              });
+            }
+            if (state.witnesses && state.witnesses.length)
+              witnesses = state.witnesses;
+            return true;
+          } catch (e) {
+            return false;
+          }
+        }
+
         // bind all inputs
         var ids = [
           "name",
@@ -1046,7 +1104,10 @@
           "collateralDesc",
         ];
         ids.forEach(function (id) {
-          $(id).addEventListener("input", render);
+          $(id).addEventListener("input", function () {
+            render();
+            saveState();
+          });
         });
         [
           "hasTerm",
@@ -1056,13 +1117,17 @@
           "lendJeff",
           "lendClar",
         ].forEach(function (id) {
-          $(id).addEventListener("change", render);
+          $(id).addEventListener("change", function () {
+            render();
+            saveState();
+          });
         });
 
         $("wAdd").addEventListener("click", function () {
           witnesses.push({ name: "" });
           buildWitnessForm();
           render();
+          saveState();
         });
 
         $("btnPdf").addEventListener("click", function () {
@@ -1081,10 +1146,14 @@
           $("lendJeff").checked = true;
           $("lendClar").checked = true;
           witnesses = [{ name: "" }];
+          try {
+            localStorage.removeItem(STORAGE_KEY);
+          } catch (e) {}
           buildWitnessForm();
           render();
         });
 
+        loadState();
         buildWitnessForm();
         render();
       })();
