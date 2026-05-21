@@ -1,0 +1,1093 @@
+<!doctype html>
+<html lang="tl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Loan Agreement Generator — Kasunduan sa Utang</title>
+    <style>
+      :root {
+        --bg: #e7e0d2;
+        --panel: #f5f0e6;
+        --panel-edge: #d9cfba;
+        --ink: #23262d;
+        --ink-soft: #5b5648;
+        --accent: #7c2128; /* oxblood */
+        --accent-dark: #5e171c;
+        --gold: #9a7b3f;
+        --gold-soft: #c8b078;
+        --paper: #fffdf7;
+        --paper-line: #1f2228;
+        --field-bg: #fbf8f1;
+        --field-edge: #cdc3ac;
+        --focus: #7c2128;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family:
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          Roboto,
+          "Helvetica Neue",
+          Arial,
+          sans-serif;
+        background:
+          radial-gradient(
+            1200px 600px at 12% -10%,
+            rgba(154, 123, 63, 0.14),
+            transparent 60%
+          ),
+          radial-gradient(
+            900px 500px at 110% 0%,
+            rgba(124, 33, 40, 0.1),
+            transparent 55%
+          ),
+          var(--bg);
+        color: var(--ink);
+        min-height: 100vh;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* ---------- Header ---------- */
+      header.topbar {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        padding: 22px clamp(16px, 4vw, 46px);
+        border-bottom: 1px solid var(--panel-edge);
+        background: linear-gradient(
+          180deg,
+          rgba(255, 253, 247, 0.7),
+          rgba(255, 253, 247, 0)
+        );
+      }
+      .seal {
+        flex: 0 0 auto;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        border: 2px solid var(--accent);
+        display: grid;
+        place-items: center;
+        position: relative;
+        box-shadow: inset 0 0 0 3px rgba(124, 33, 40, 0.12);
+        background: radial-gradient(circle at 50% 40%, #fff7ee, #f3e8d3);
+      }
+      .seal::after {
+        content: "";
+        position: absolute;
+        inset: 7px;
+        border: 1px dashed var(--gold);
+        border-radius: 50%;
+      }
+      .seal span {
+        font-family:
+          "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua",
+          Georgia, serif;
+        font-weight: 700;
+        color: var(--accent);
+        font-size: 24px;
+        letter-spacing: 0.5px;
+        z-index: 1;
+      }
+      .titles h1 {
+        margin: 0;
+        font-size: clamp(20px, 3vw, 29px);
+        letter-spacing: 0.14em;
+        font-weight: 800;
+        color: var(--ink);
+        text-transform: uppercase;
+      }
+      .titles p {
+        margin: 3px 0 0;
+        font-family:
+          "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+        font-style: italic;
+        color: var(--accent);
+        font-size: 15px;
+        letter-spacing: 0.02em;
+      }
+
+      /* ---------- Layout ---------- */
+      main {
+        display: grid;
+        grid-template-columns: minmax(330px, 430px) 1fr;
+        gap: 0;
+        align-items: start;
+      }
+      @media (max-width: 880px) {
+        main {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* ---------- Form ---------- */
+      .form {
+        padding: clamp(16px, 3vw, 30px);
+        border-right: 1px solid var(--panel-edge);
+      }
+      @media (max-width: 880px) {
+        .form {
+          border-right: none;
+          border-bottom: 1px solid var(--panel-edge);
+        }
+      }
+
+      fieldset {
+        border: 1px solid var(--panel-edge);
+        border-radius: 12px;
+        background: var(--panel);
+        padding: 16px 16px 18px;
+        margin: 0 0 18px;
+      }
+      legend {
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--accent);
+        padding: 0 8px;
+      }
+      label.fld {
+        display: block;
+        margin: 0 0 13px;
+      }
+      label.fld:last-child {
+        margin-bottom: 0;
+      }
+      .lbl {
+        display: block;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--ink-soft);
+        margin: 0 0 5px;
+        letter-spacing: 0.01em;
+      }
+      input[type="text"] {
+        width: 100%;
+        padding: 9px 11px;
+        font-size: 14.5px;
+        color: var(--ink);
+        background: var(--field-bg);
+        border: 1px solid var(--field-edge);
+        border-radius: 8px;
+        font-family: inherit;
+        transition:
+          border-color 0.15s,
+          box-shadow 0.15s;
+      }
+      input[type="text"]:focus {
+        outline: none;
+        border-color: var(--focus);
+        box-shadow: 0 0 0 3px rgba(124, 33, 40, 0.14);
+      }
+      .row3 {
+        display: grid;
+        grid-template-columns: 1fr 1.3fr 0.9fr;
+        gap: 9px;
+      }
+      .row2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 11px;
+      }
+
+      .check {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        cursor: pointer;
+        padding: 9px 11px;
+        border: 1px solid var(--field-edge);
+        border-radius: 8px;
+        background: var(--field-bg);
+        margin-bottom: 9px;
+        transition:
+          border-color 0.15s,
+          background 0.15s;
+      }
+      .check:last-child {
+        margin-bottom: 0;
+      }
+      .check:hover {
+        border-color: var(--gold);
+      }
+      .check input {
+        margin-top: 2px;
+        width: 17px;
+        height: 17px;
+        accent-color: var(--accent);
+        flex: 0 0 auto;
+        cursor: pointer;
+      }
+      .check .ctext {
+        font-size: 13.5px;
+        line-height: 1.35;
+        color: var(--ink);
+      }
+      .check .ctext small {
+        display: block;
+        color: var(--ink-soft);
+        font-size: 11.5px;
+        margin-top: 1px;
+      }
+
+      .subfield {
+        margin-top: 10px;
+        display: none;
+      }
+      .subfield.show {
+        display: block;
+        animation: fade 0.18s ease;
+      }
+      @keyframes fade {
+        from {
+          opacity: 0;
+          transform: translateY(-3px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      /* ---------- Witness list ---------- */
+      .witness-row {
+        display: flex;
+        gap: 8px;
+        align-items: stretch;
+        margin-bottom: 8px;
+      }
+      .witness-row .w-name {
+        flex: 1;
+        width: auto;
+      }
+      .w-del {
+        flex: 0 0 auto;
+        padding: 0 13px;
+        font-size: 18px;
+        line-height: 1;
+        background: transparent;
+        color: var(--accent);
+        border: 1px solid var(--field-edge);
+        border-radius: 8px;
+        font-weight: 700;
+      }
+      .w-del:hover {
+        background: var(--accent);
+        color: #fff7ee;
+        border-color: var(--accent);
+      }
+      .w-add {
+        width: 100%;
+        margin-top: 4px;
+        padding: 9px 12px;
+        font-size: 13px;
+        font-weight: 700;
+        background: transparent;
+        color: var(--accent);
+        border: 1px dashed var(--gold);
+        border-radius: 8px;
+      }
+      .w-add:hover {
+        background: #fff;
+        border-color: var(--accent);
+      }
+
+      /* ---------- Actions ---------- */
+      .actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 4px;
+      }
+      button {
+        font-family: inherit;
+        font-weight: 700;
+        cursor: pointer;
+        border-radius: 9px;
+        padding: 13px 18px;
+        font-size: 14.5px;
+        letter-spacing: 0.02em;
+        transition:
+          transform 0.08s,
+          filter 0.15s,
+          background 0.15s;
+        border: 1px solid transparent;
+      }
+      button:active {
+        transform: translateY(1px);
+      }
+      .btn-pdf {
+        flex: 1;
+        background: linear-gradient(180deg, var(--accent), var(--accent-dark));
+        color: #fff7ee;
+        border-color: var(--accent-dark);
+        box-shadow: 0 4px 14px rgba(124, 33, 40, 0.28);
+      }
+      .btn-pdf:hover {
+        filter: brightness(1.06);
+      }
+      .btn-reset {
+        background: transparent;
+        color: var(--ink-soft);
+        border-color: var(--field-edge);
+      }
+      .btn-reset:hover {
+        background: #fff;
+        color: var(--accent);
+      }
+      .hint {
+        font-size: 11.5px;
+        color: var(--ink-soft);
+        margin: 11px 2px 0;
+        line-height: 1.45;
+      }
+      .hint b {
+        color: var(--accent);
+      }
+
+      /* ---------- Preview ---------- */
+      .preview {
+        padding: clamp(16px, 3vw, 34px);
+        display: flex;
+        justify-content: center;
+      }
+      .preview-inner {
+        width: 100%;
+        max-width: 720px;
+      }
+      .preview-tag {
+        text-align: center;
+        font-size: 11px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--ink-soft);
+        margin: 0 0 14px;
+        font-weight: 700;
+      }
+
+      .paper {
+        background: var(--paper);
+        color: var(--paper-line);
+        padding: 54px 56px 60px;
+        border-radius: 3px;
+        box-shadow:
+          0 16px 40px rgba(40, 30, 15, 0.22),
+          0 2px 6px rgba(0, 0, 0, 0.08);
+        border: 1px solid #e7ddc7;
+        position: relative;
+        font-family:
+          "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua",
+          Georgia, serif;
+        line-height: 1.7;
+        font-size: 15.5px;
+      }
+      .paper::before {
+        content: "";
+        position: absolute;
+        inset: 14px;
+        border: 1.5px solid var(--accent);
+        border-radius: 2px;
+        pointer-events: none;
+        box-shadow:
+          inset 0 0 0 2px #fff,
+          inset 0 0 0 3.5px var(--gold-soft);
+      }
+      .doc-content {
+        position: relative;
+      }
+
+      .doc-title {
+        text-align: center;
+        font-weight: 800;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        font-size: 21px;
+        margin: 4px 0 4px;
+        color: var(--accent);
+      }
+      .doc-rule {
+        width: 90px;
+        height: 2px;
+        background: var(--gold);
+        margin: 6px auto 26px;
+        position: relative;
+      }
+      .doc-rule::before,
+      .doc-rule::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        width: 5px;
+        height: 5px;
+        background: var(--accent);
+        border-radius: 50%;
+        transform: translateY(-50%);
+      }
+      .doc-rule::before {
+        left: -12px;
+      }
+      .doc-rule::after {
+        right: -12px;
+      }
+
+      .doc-content p {
+        margin: 0 0 16px;
+        text-align: justify;
+      }
+
+      .fill {
+        font-weight: 700;
+        color: #111;
+      }
+      .blank {
+        display: inline-block;
+        border-bottom: 1px solid #555;
+        min-width: 60px;
+        text-align: center;
+        line-height: 1;
+        color: #888;
+        font-style: italic;
+        font-size: 0.9em;
+        padding: 0 4px;
+      }
+
+      .sign-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px 36px;
+        margin-top: 34px;
+      }
+      .sign-col .sc-label {
+        font-size: 13px;
+        font-weight: 700;
+        margin-bottom: 30px;
+      }
+      .sign-line {
+        border-top: 1px solid #2a2a2a;
+        padding-top: 4px;
+        margin-bottom: 22px;
+      }
+      .sign-line .nm {
+        font-weight: 700;
+        font-size: 14px;
+      }
+      .sign-line .rl {
+        font-style: italic;
+        font-size: 12.5px;
+        color: #555;
+      }
+
+      .meta-row {
+        display: flex;
+        gap: 40px;
+        margin-top: 24px;
+        font-size: 14px;
+      }
+      .meta-row .mk {
+        font-weight: 700;
+      }
+
+      .witness-box {
+        margin-top: 34px;
+      }
+      .witness-box .wt {
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: 0.05em;
+        margin-bottom: 24px;
+        color: var(--accent);
+      }
+      .witness-box .sign-line {
+        max-width: 320px;
+      }
+
+      .empty-note {
+        display: none;
+      }
+
+      /* ---------- Print ---------- */
+      @media print {
+        @page {
+          size: A4;
+          margin: 18mm 16mm;
+        }
+        html,
+        body {
+          background: #fff !important;
+          min-height: 0 !important;
+          height: auto !important;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+        /* Fully remove non-document parts so no blank page is created */
+        header.topbar,
+        .form,
+        .preview-tag {
+          display: none !important;
+        }
+        main {
+          display: block !important;
+          min-height: 0 !important;
+          height: auto !important;
+        }
+        .preview {
+          display: block !important;
+          padding: 0 !important;
+          margin: 0 !important;
+          min-height: 0 !important;
+          height: auto !important;
+        }
+        .preview-inner {
+          max-width: none !important;
+          width: 100% !important;
+        }
+        .paper {
+          box-shadow: none;
+          border: none;
+          border-radius: 0;
+          padding: 0;
+          max-width: none;
+          font-size: 13.5px;
+          line-height: 1.6;
+          color: #000;
+          page-break-inside: avoid;
+        }
+        /* black & white, no decorative frame */
+        .paper::before {
+          display: none;
+        }
+        .doc-title {
+          color: #000;
+        }
+        .doc-rule {
+          height: 0;
+          background: none;
+          border-top: 1.5px solid #000;
+          width: 80px;
+        }
+        .doc-rule::before,
+        .doc-rule::after {
+          display: none;
+        }
+        .fill {
+          color: #000;
+        }
+        .blank {
+          color: #000;
+        }
+        .sign-line {
+          border-top: 1px solid #000;
+        }
+        .sign-line .rl {
+          color: #000;
+        }
+        .witness-box .wt {
+          color: #000;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="seal"><span>₱</span></div>
+      <div class="titles">
+        <h1>Loan Agreement Generator</h1>
+        <p>Kasunduan sa Utang &mdash; Juan &amp; Wife Dela Cruz</p>
+      </div>
+    </header>
+
+    <main>
+      <!-- ============ FORM ============ -->
+      <section class="form">
+        <fieldset>
+          <legend>Umuutang</legend>
+          <label class="fld">
+            <span class="lbl">Pangalan ng Umuutang</span>
+            <input type="text" id="name" placeholder="Buong pangalan" />
+          </label>
+          <label class="fld">
+            <span class="lbl">Tirahan ng Umuutang</span>
+            <input type="text" id="address" placeholder="Kumpletong address" />
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Detalye ng Utang</legend>
+          <label class="fld">
+            <span class="lbl">Magkano (halaga ng inutang)</span>
+            <input type="text" id="amount" placeholder="hal. 10,000" />
+          </label>
+
+          <span class="lbl">Petsa ng pagtanggap ng pera</span>
+          <div class="row3">
+            <label class="fld" style="margin-bottom: 0">
+              <span class="lbl" style="font-size: 11px">Araw</span>
+              <input type="text" id="day" placeholder="15" />
+            </label>
+            <label class="fld" style="margin-bottom: 0">
+              <span class="lbl" style="font-size: 11px">Buwan</span>
+              <input type="text" id="month" placeholder="Mayo" />
+            </label>
+            <label class="fld" style="margin-bottom: 0">
+              <span class="lbl" style="font-size: 11px">Taon</span>
+              <input type="text" id="year" placeholder="2026" />
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Interes at Pagbabayad</legend>
+          <label class="fld">
+            <span class="lbl">Buwanang interes (%)</span>
+            <input type="text" id="interest" placeholder="hal. 5" />
+          </label>
+
+          <div class="row2">
+            <label class="fld" style="margin-bottom: 0">
+              <span class="lbl">Buwanang tubo (Php)</span>
+              <input type="text" id="tubo" placeholder="hal. 500" />
+            </label>
+            <label class="fld" style="margin-bottom: 0">
+              <span class="lbl">Bayad tuwing ika-__ ng buwan</span>
+              <input type="text" id="payday" placeholder="hal. 15" />
+            </label>
+          </div>
+
+          <label class="check" style="margin-top: 13px">
+            <input type="checkbox" id="hasTerm" />
+            <span class="ctext"
+              >May takdang buwan ang pagbabayad
+              <small
+                >Kapag hindi naka-check, ang utang ay <b>indefinite</b> (walang
+                takdang petsa).</small
+              >
+            </span>
+          </label>
+          <div class="subfield" id="termField">
+            <span class="lbl">Ilang buwan bago ibabalik?</span>
+            <input type="text" id="termMonths" placeholder="hal. 6" />
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Kolateral</legend>
+          <label class="check">
+            <input type="checkbox" id="hasCollateral" />
+            <span class="ctext"
+              >May kolateral (collateral) ang utang
+              <small
+                >Kapag hindi naka-check (default), itatala sa kasunduan na
+                <b>walang kolateral</b>.</small
+              >
+            </span>
+          </label>
+          <div class="subfield" id="collateralField">
+            <span class="lbl">Ilarawan ang kolateral</span>
+            <input
+              type="text"
+              id="collateralDesc"
+              placeholder="hal. titulo ng lupa, motorsiklo, alahas"
+            />
+            <label class="check" style="margin-top: 11px">
+              <input type="checkbox" id="hasRemata" />
+              <span class="ctext"
+                >Idagdag ang REMATA clause
+                <small
+                  >Kapag hindi nabayaran, mare-remata (maaaring ariin o
+                  ipagbili) ng Nagpapautang ang kolateral bilang
+                  kabayaran.</small
+                >
+              </span>
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Nagpapautang</legend>
+          <label class="check">
+            <input type="checkbox" id="lendJeff" checked />
+            <span class="ctext">Juan Dela Cruz</span>
+          </label>
+          <label class="check">
+            <input type="checkbox" id="lendClar" checked />
+            <span class="ctext">Wife Dela Cruz</span>
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Saksi</legend>
+          <label class="check">
+            <input type="checkbox" id="hasWitness" />
+            <span class="ctext"
+              >Magdagdag ng saksi (witness)
+              <small
+                >Default: wala. I-check para lumabas ang seksyon ng
+                saksi.</small
+              >
+            </span>
+          </label>
+          <div class="subfield" id="witnessField">
+            <span class="lbl">Pangalan ng saksi (opsyonal)</span>
+            <div id="witnessList"></div>
+            <button type="button" class="w-add" id="wAdd">
+              + Magdagdag pa ng saksi
+            </button>
+          </div>
+        </fieldset>
+
+        <div class="actions">
+          <button class="btn-pdf" id="btnPdf">⬇ I-download bilang PDF</button>
+          <button class="btn-reset" id="btnReset">Linisin</button>
+        </div>
+        <p class="hint">
+          Pagkapindot, sa dialog na lalabas piliin ang
+          <b>“Save as PDF”</b> bilang destination, pagkatapos ay i-save.
+          Gumagana ito kahit walang internet.
+        </p>
+      </section>
+
+      <!-- ============ PREVIEW ============ -->
+      <section class="preview">
+        <div class="preview-inner">
+          <p class="preview-tag">Preview ng Dokumento</p>
+          <div class="paper">
+            <div class="doc-content">
+              <div class="doc-title">Kasunduan sa Utang</div>
+              <div class="doc-rule"></div>
+
+              <p id="p1"></p>
+              <p id="p2"></p>
+              <p id="pCollateral"></p>
+              <p id="pDefault"></p>
+
+              <div class="sign-grid">
+                <div class="sign-col">
+                  <div class="sc-label">Pumipirma:</div>
+                  <div class="sign-line">
+                    <div class="nm" id="borrowerNm">&nbsp;</div>
+                    <div class="rl" id="borrowerSig">Umuutang</div>
+                  </div>
+                </div>
+                <div class="sign-col">
+                  <div class="sc-label">Nagpapautang:</div>
+                  <div id="lenderSigs"></div>
+                </div>
+              </div>
+
+              <div
+                class="witness-box"
+                id="witnessBox"
+                style="display: none"
+              ></div>
+
+              <div class="meta-row">
+                <div>
+                  <span class="mk">Petsa:</span>
+                  <span id="metaPetsa">________________</span>
+                </div>
+                <div><span class="mk">Lugar:</span> Malacanang, Palace</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      (function () {
+        "use strict";
+
+        var $ = function (id) {
+          return document.getElementById(id);
+        };
+
+        // value-or-blank renderer for inline document text
+        function field(value, minWidth) {
+          var v = (value || "").trim();
+          if (v) {
+            return '<span class="fill">' + escapeHtml(v) + "</span>";
+          }
+          return (
+            '<span class="blank" style="min-width:' +
+            (minWidth || 60) +
+            'px">&nbsp;</span>'
+          );
+        }
+
+        function escapeHtml(s) {
+          return String(s)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;");
+        }
+
+        // ---- Dynamic witnesses ----
+        var witnesses = [{ name: "" }];
+
+        function buildWitnessForm() {
+          var box = $("witnessList");
+          var html = "";
+          for (var i = 0; i < witnesses.length; i++) {
+            html += '<div class="witness-row">';
+            html +=
+              '<input type="text" class="w-name" data-i="' +
+              i +
+              '" placeholder="Pangalan ng saksi #' +
+              (i + 1) +
+              ' (opsyonal)" />';
+            if (witnesses.length > 1) {
+              html +=
+                '<button type="button" class="w-del" data-i="' +
+                i +
+                '" aria-label="Alisin ang saksi">&times;</button>';
+            }
+            html += "</div>";
+          }
+          box.innerHTML = html;
+
+          var inputs = box.querySelectorAll(".w-name");
+          for (var j = 0; j < inputs.length; j++) {
+            (function (inp) {
+              var idx = parseInt(inp.getAttribute("data-i"), 10);
+              inp.value = witnesses[idx].name;
+              inp.addEventListener("input", function () {
+                witnesses[idx].name = inp.value;
+                render();
+              });
+            })(inputs[j]);
+          }
+          var dels = box.querySelectorAll(".w-del");
+          for (var k = 0; k < dels.length; k++) {
+            (function (btn) {
+              btn.addEventListener("click", function () {
+                var idx = parseInt(btn.getAttribute("data-i"), 10);
+                witnesses.splice(idx, 1);
+                buildWitnessForm();
+                render();
+              });
+            })(dels[k]);
+          }
+        }
+
+        function lenderNames() {
+          var arr = [];
+          if ($("lendJeff").checked) arr.push("Juan Dela Cruz");
+          if ($("lendClar").checked) arr.push("Wife Dela Cruz");
+          return arr;
+        }
+
+        function lenderBodyText() {
+          var arr = lenderNames();
+          if (arr.length === 0)
+            return '<span class="blank" style="min-width:160px">&nbsp;</span>';
+          if (arr.length === 1)
+            return '<span class="fill">' + arr[0] + "</span>";
+          return '<span class="fill">' + arr[0] + " at " + arr[1] + "</span>";
+        }
+
+        function render() {
+          // toggles
+          var hasTerm = $("hasTerm").checked;
+          $("termField").classList.toggle("show", hasTerm);
+
+          var hasCollateral = $("hasCollateral").checked;
+          $("collateralField").classList.toggle("show", hasCollateral);
+
+          var hasWitness = $("hasWitness").checked;
+          $("witnessField").classList.toggle("show", hasWitness);
+          $("witnessBox").style.display = hasWitness ? "block" : "none";
+
+          // ---- Paragraph 1 ----
+          var p1 =
+            "Ako, si " +
+            field($("name").value, 150) +
+            ", naninirahan sa " +
+            field($("address").value, 180) +
+            ", ay kusang-loob na umutang kay " +
+            lenderBodyText() +
+            " ng halagang Php " +
+            field($("amount").value, 90) +
+            " na natanggap ko noong ika-" +
+            field($("day").value, 38) +
+            " ng " +
+            field($("month").value, 80) +
+            ", " +
+            field($("year").value, 30) +
+            ".";
+          $("p1").innerHTML = p1;
+
+          // ---- Meta petsa (auto-fill from form) ----
+          var d = ($("day").value || "").trim();
+          var mo = ($("month").value || "").trim();
+          var yr = ($("year").value || "").trim();
+          var petsa =
+            mo && d && yr
+              ? mo + " " + d + ", " + yr
+              : mo && d
+                ? mo + " " + d
+                : mo && yr
+                  ? mo + " " + yr
+                  : [d, mo, yr].filter(Boolean).join(" ");
+          $("metaPetsa").textContent = petsa || "________________";
+
+          // ---- Paragraph 2 ----
+          var term = "";
+          if (hasTerm) {
+            var m = field($("termMonths").value, 38);
+            term = ", sa loob ng " + m + " (" + m + ") buwan";
+          }
+          var p2 =
+            "Sumasang-ayon akong bayaran ang nasabing halaga kasama ang interes na " +
+            field($("interest").value, 40) +
+            "% bawat buwan" +
+            term +
+            ". " +
+            "Ang buwanang tubo ay Php " +
+            field($("tubo").value, 80) +
+            ", babayaran sa o bago ang ika-" +
+            field($("payday").value, 38) +
+            " ng bawat buwan.";
+          $("p2").innerHTML = p2;
+
+          // ---- Collateral clause ----
+          var pCol;
+          if (hasCollateral) {
+            pCol =
+              "Bilang katiyakan sa pagbabayad ng nasabing utang, ipinangako ko ang sumusunod na kolateral (collateral): " +
+              field($("collateralDesc").value, 180) +
+              ".";
+          } else {
+            pCol = "Ang utang na ito ay walang anumang kolateral (collateral).";
+          }
+          $("pCollateral").innerHTML = pCol;
+
+          // ---- Default / Remata clause ----
+          // REMATA only applies when there is collateral
+          var hasRemata = hasCollateral && $("hasRemata").checked;
+          var pDef;
+          if (hasRemata) {
+            pDef =
+              "Kung ako ay mabigo sa pagbabayad sa takdang petsa, sumasang-ayon akong " +
+              "ipa-remata ang aking inilagay na kolateral, at ito ay maaaring ariin o ipagbili ng Nagpapautang " +
+              "bilang kabayaran sa aking natitirang utang. " +
+              "Ang kasunduang ito ay nagsisilbing opisyal na katibayan ng aking pananagutan.";
+          } else {
+            pDef =
+              "Kung ako ay mabigo sa pagbabayad sa takdang petsa, sumasang-ayon akong " +
+              "bayaran ang anumang karagdagang interes o multa na ipapasya ng Nagpapautang. " +
+              "Ang kasunduang ito ay nagsisilbing opisyal na katibayan ng aking pananagutan.";
+          }
+          $("pDefault").innerHTML = pDef;
+
+          // ---- Lender signatures ----
+          var arr = lenderNames();
+          var sigHtml = "";
+          if (arr.length === 0) {
+            sigHtml =
+              '<div class="sign-line"><div class="nm">&nbsp;</div>' +
+              '<div class="rl">Nagpapautang</div></div>';
+          } else {
+            for (var i = 0; i < arr.length; i++) {
+              sigHtml +=
+                '<div class="sign-line"><div class="nm">' +
+                arr[i] +
+                "</div>" +
+                '<div class="rl">Nagpapautang</div></div>';
+            }
+          }
+          $("lenderSigs").innerHTML = sigHtml;
+
+          // ---- Borrower name in signatory (auto-filled from body) ----
+          var bn = ($("name").value || "").trim();
+          $("borrowerNm").innerHTML = bn ? escapeHtml(bn) : "&nbsp;";
+
+          // ---- Witness signatures (dynamic list) ----
+          if (hasWitness) {
+            var wlabel = witnesses.length > 1 ? "Mga Saksi:" : "Saksi:";
+            var wHtml = '<div class="wt">' + wlabel + "</div>";
+            for (var w = 0; w < witnesses.length; w++) {
+              var wnm = (witnesses[w].name || "").trim();
+              wHtml +=
+                '<div class="sign-line">' +
+                '<div class="nm">' +
+                (wnm ? escapeHtml(wnm) : "&nbsp;") +
+                "</div>" +
+                '<div class="rl">Pangalan at Lagda ng Saksi</div>' +
+                "</div>";
+            }
+            $("witnessBox").innerHTML = wHtml;
+          }
+        }
+
+        // bind all inputs
+        var ids = [
+          "name",
+          "address",
+          "amount",
+          "day",
+          "month",
+          "year",
+          "interest",
+          "tubo",
+          "payday",
+          "termMonths",
+          "collateralDesc",
+        ];
+        ids.forEach(function (id) {
+          $(id).addEventListener("input", render);
+        });
+        [
+          "hasTerm",
+          "hasCollateral",
+          "hasRemata",
+          "hasWitness",
+          "lendJeff",
+          "lendClar",
+        ].forEach(function (id) {
+          $(id).addEventListener("change", render);
+        });
+
+        $("wAdd").addEventListener("click", function () {
+          witnesses.push({ name: "" });
+          buildWitnessForm();
+          render();
+        });
+
+        $("btnPdf").addEventListener("click", function () {
+          window.print();
+        });
+
+        $("btnReset").addEventListener("click", function () {
+          if (!confirm("Linisin ang lahat ng nailagay?")) return;
+          ids.forEach(function (id) {
+            $(id).value = "";
+          });
+          $("hasTerm").checked = false;
+          $("hasCollateral").checked = false;
+          $("hasRemata").checked = false;
+          $("hasWitness").checked = false;
+          $("lendJeff").checked = true;
+          $("lendClar").checked = true;
+          witnesses = [{ name: "" }];
+          buildWitnessForm();
+          render();
+        });
+
+        buildWitnessForm();
+        render();
+      })();
+    </script>
+  </body>
+</html>
